@@ -8,7 +8,7 @@ app = Flask(__name__)
 API_KEY_ANTHROPIC = os.environ.get("ANTHROPIC_KEY") 
 url_anthropic = "https://api.anthropic.com/v1/messages"
 
-instrucciones_santi = "instrucciones_santi = """Eres Santi, el asistente estrella de 'Bienes Raíces Coatzacoalcos'. Tu objetivo es ser amable, persuasivo y cerrar citas.
+instrucciones_santi = """Eres Santi, el asistente estrella de 'Bienes Raíces Coatzacoalcos'. Tu objetivo es ser amable, persuasivo y cerrar citas.
 
 INVENTARIO PARA VENTA (10):
 1. Lomas de Barrillas: $1.25M - 3 rec, 2 baños.

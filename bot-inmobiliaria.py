@@ -10,13 +10,9 @@ url_anthropic = "https://api.anthropic.com/v1/messages"
 
 instrucciones_santi = "Eres Santi, asistente de Bienes Raíces Coatzacoalcos. Da respuestas cortas y persuasivas. Propiedades: 1. Casa Lomas de Barrillas $1,200,000. 2. Depa Malecón renta $8,500. Pregunta presupuesto y método de pago."
 
-historial = []
-
 @app.route('/whatsapp', methods=['POST'])
 def bot():
-    global historial
     mensaje_cliente = request.values.get('Body', '')
-    historial.append({"role": "user", "content": mensaje_cliente})
     
     if not API_KEY_ANTHROPIC:
         resp = MessagingResponse()
@@ -30,19 +26,17 @@ def bot():
     }
     
     payload = {
-        "model": "claude-3-haiku-20240307", 
+        "model": "claude-3-5-sonnet-20240620", 
         "max_tokens": 300,
         "system": instrucciones_santi,
-        "messages": historial
+        "messages": [{"role": "user", "content": mensaje_cliente}]
     }
     
     try:
         response = requests.post(url_anthropic, headers=headers, json=payload)
         if response.status_code == 200:
             respuesta_ia = response.json()["content"][0]["text"]
-            historial.append({"role": "assistant", "content": respuesta_ia})
         else:
-            # EL HACK: Mandamos el reporte médico a WhatsApp
             respuesta_ia = f"🚨 Error Anthropic {response.status_code}:\n{response.text}"
     except Exception as e:
         respuesta_ia = f"🚨 Falla en el servidor:\n{str(e)}"

@@ -26,7 +26,7 @@ def bot():
     }
     
     payload = {
-        "model": "claude-3-5-sonnet-20240620", 
+        "model": "claude-haiku-4-5-20251001", 
         "max_tokens": 300,
         "system": instrucciones_santi,
         "messages": [{"role": "user", "content": mensaje_cliente}]

@@ -18,7 +18,6 @@ def bot():
     mensaje_cliente = request.values.get('Body', '')
     historial.append({"role": "user", "content": mensaje_cliente})
     
-    # Escáner 1: Revisar si la llave de Anthropic se guardó bien en Render
     if not API_KEY_ANTHROPIC:
         resp = MessagingResponse()
         resp.message("Error: No se encontró la llave ANTHROPIC_KEY en Render.")
@@ -37,18 +36,16 @@ def bot():
         "messages": historial
     }
     
-    # Escáner 2: Ver exactamente qué responde Anthropic
     try:
         response = requests.post(url_anthropic, headers=headers, json=payload)
         if response.status_code == 200:
             respuesta_ia = response.json()["content"][0]["text"]
             historial.append({"role": "assistant", "content": respuesta_ia})
         else:
-            print("🚨 ERROR ANTHROPIC:", response.text)
-            respuesta_ia = f"Falla en Anthropic. Código: {response.status_code}"
+            # EL HACK: Mandamos el reporte médico a WhatsApp
+            respuesta_ia = f"🚨 Error Anthropic {response.status_code}:\n{response.text}"
     except Exception as e:
-        print("🚨 ERROR PYTHON:", e)
-        respuesta_ia = "Falla de conexión en código."
+        respuesta_ia = f"🚨 Falla en el servidor:\n{str(e)}"
 
     resp = MessagingResponse()
     resp.message(respuesta_ia)
